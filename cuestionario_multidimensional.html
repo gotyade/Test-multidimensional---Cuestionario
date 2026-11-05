@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuestionario multidimensional</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f6f8;--card:#fff;--tx:#1d2330;--mut:#5d6677;--ac:#2f5d9e;--bd:#d9dde5;--ok:#2e7d4f;--wn:#b7791f;--bad:#b3261e;color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171d;--card:#1d222b;--tx:#e8ebf1;--mut:#9aa3b3;--ac:#7fa8e6;--bd:#333a47;--ok:#6cc18d;--wn:#e3b05a;--bad:#f08a82;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14171d;--card:#1d222b;--tx:#e8ebf1;--mut:#9aa3b3;--ac:#7fa8e6;--bd:#333a47;--ok:#6cc18d;--wn:#e3b05a;--bad:#f08a82;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:860px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:.3em 0}h2{font-size:1.15rem;margin:0 0 .3em;color:var(--ac)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin:14px 0}
+.mut{color:var(--mut);font-size:.92rem}
+label.f{display:block;margin:8px 0;font-size:.9rem}
+input[type=text],input[type=number],input[type=date]{width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.q{padding:10px 0;border-top:1px solid var(--bd)}
+.q p{margin:0 0 6px;font-weight:500}.q.miss{background:rgba(179,38,30,.1)}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts label{flex:1 1 120px;border:1px solid var(--bd);border-radius:8px;padding:6px 8px;font-size:.85rem;cursor:pointer;display:flex;gap:6px;align-items:center}
+.opts input:checked+span{font-weight:700;color:var(--ac)}
+button{font:inherit;border:0;border-radius:10px;padding:12px 20px;background:var(--ac);color:#fff;cursor:pointer;font-weight:600}
+button.sec{background:transparent;color:var(--ac);border:1px solid var(--ac)}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.85rem;font-weight:600;border:1px solid currentColor}
+.l0{color:var(--ok)}.l1{color:var(--wn)}.l2{color:var(--bad)}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{border-bottom:1px solid var(--bd);padding:6px 8px;text-align:left}
+.tw{overflow-x:auto}
+.alert{border:2px solid var(--bad);border-radius:10px;padding:10px 14px;margin:10px 0}
+.alert.w{border-color:var(--wn)}
+#report{display:none}
+.sum{border:2px solid var(--tx);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sum th,.sum td{border:1px solid var(--bd);padding:5px 9px;font-size:.88rem}
+.sum thead th{text-align:center;background:var(--bg)}
+.sum tbody{border-top:2px solid var(--tx)}
+.sum .ts{font-weight:700;vertical-align:top;background:var(--bg)}
+.sum .dm{vertical-align:middle;font-weight:500}
+.sum .sh td{text-align:center;font-size:.8rem;color:var(--mut);background:var(--bg)}
+.sum .on{font-weight:700}
+.sum .on.k0{background:rgba(46,125,79,.22);color:var(--ok)}
+.sum .on.k1{background:rgba(214,150,30,.25);color:var(--wn)}
+.sum .on.k2{background:rgba(179,38,30,.2);color:var(--bad)}
+.sum .on.kn{background:rgba(47,93,158,.2);color:var(--ac)}
+.sum .sc{float:right;margin-left:12px}
+.sum .bf{text-align:center}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+@media print{
+ body{background:#fff;color:#000;font-size:11pt}
+ :root{--card:#fff;--bd:#bbb;--tx:#000;--mut:#444;--ac:#1f4378;--ok:#1d6a3d;--wn:#8a5a00;--bad:#9b1c14}
+ #formWrap,.actions{display:none!important}
+ #report{display:block!important}
+ main{padding:0;max-width:none}
+ .card{break-inside:avoid;border-radius:0}
+}
+</style>
+</head>
+<body>
+<main>
+<div id="formWrap">
+<h1>Test multidimensional para la evaluación clínica</h1>
+<p class="mut">BFI-10 · PHQ-9 · GAD-7 · DASS-21 · SDRS — Jóvenes y adultos · 12 a 15 minutos</p>
+<div class="card">
+<p>El objetivo de este cuestionario es conocerte mejor y entender cómo te has sentido últimamente. No hay respuestas correctas o incorrectas; la mejor respuesta es la que describa con sinceridad tu realidad actual. Tu participación es voluntaria y la información se trata de forma confidencial bajo secreto profesional.</p>
+<div class="row">
+<label class="f">Nombre<input type="text" id="nom"></label>
+<label class="f">Edad<input type="number" id="edad" min="10" max="99"></label>
+<label class="f">Sexo<select id="sexo" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit"><option value="">Seleccionar…</option><option>Femenino</option><option>Masculino</option><option>Otro</option></select></label>
+<label class="f">Fecha de aplicación<input type="date" id="fecha"></label>
+</div>
+<h2>Consentimiento informado</h2>
+<p class="mut">Declaro que he sido informado/a sobre la naturaleza de esta evaluación. Comprendo que los resultados serán utilizados por el/la profesional de la psicología para la atención clínica, que mi participación es voluntaria y que la información está protegida por el secreto profesional, salvo en situaciones de riesgo inminente para mi vida o la de otros. En menores de 18 años se requiere firma de madre, padre o tutor.</p>
+<label><input type="checkbox" id="cons"> Acepto el consentimiento informado</label>
+</div>
+<div id="blocks"></div>
+<button id="go">Calcular resultados</button>
+<p class="mut" id="err" style="color:var(--bad)"></p>
+</div>
+
+<div id="done" style="display:none"><h1>¡Cuestionario completado!</h1><div class="card"><p>Copia el texto de abajo y envíaselo al profesional (por mensaje o correo) tal como aparece, sin modificarlo.</p><textarea id="raw" readonly rows="8" style="width:100%;font:13px/1.4 ui-monospace,Consolas,monospace;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)"></textarea><div class="actions"><button id="dl">Copiar texto</button></div><p class="mut" id="cpmsg"></p></div></div>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const OPT={
+ bfi:["Muy en desacuerdo","Un poco en desacuerdo","Neutral","Un poco de acuerdo","Muy de acuerdo"],
+ freq:["Para nada","Algunos días","Más de la mitad de los días","Casi todos los días"],
+ dass:["No me ha ocurrido","Me ha ocurrido un poco","Me ha ocurrido varias veces","Me ha ocurrido mucho"],
+ sdrs:["Nunca","Rara vez","Varias veces","Siempre"]};
+const B=[
+{id:"bfi",t:"Bloque 1: Rasgos de personalidad (BFI-10)",ins:"Indica tu nivel de acuerdo con cada frase. Yo soy alguien que…",o:"bfi",base:1,q:["Es reservado/a","Es digno/a de confianza","Tiende a ser perezoso/a","Es relajado/a, maneja bien el estrés","Tiene pocos intereses artísticos","Es extrovertido/a, sociable","Tiende a criticar a los demás","Hace un trabajo minucioso","Se pone nervioso/a fácilmente","Tiene una imaginación activa"]},
+{id:"phq",t:"Bloque 2a: Estado de ánimo (PHQ-9)",ins:"¿Con qué frecuencia has sentido lo siguiente en las últimas 2 semanas?",o:"freq",base:0,q:["Poco interés o alegría por hacer las cosas.","Sensación de estar decaído/a, deprimido/a o sin esperanzas.","Problemas para dormir o para mantenerse dormido/a, o dormir demasiado.","Sensación de cansancio o de tener poca energía.","Poco apetito o comer en exceso.","Sentirse mal consigo mismo/a, sentir que es un fracaso o que ha decepcionado a su familia o a sí mismo/a.","Dificultad para concentrarse en cosas como leer el periódico o ver la televisión.","Moverse o hablar tan lentamente que otras personas podrían notarlo, o lo contrario: estar tan inquieto/a o agitado/a que se ha estado moviendo mucho más de lo normal.","Pensamientos de que estaría mejor muerto/a o de lastimarse de alguna manera."]},
+{id:"gad",t:"Bloque 2b: Ansiedad (GAD-7)",ins:"¿Con qué frecuencia has sentido lo siguiente en las últimas 2 semanas?",o:"freq",base:0,q:["Sentirse nervioso/a, ansioso/a o con los nervios de punta.","No poder dejar de preocuparse o no poder controlar la preocupación.","Preocuparse demasiado por diferentes cosas.","Dificultad para relajarse.","Estar tan inquieto/a que es difícil permanecer sentado/a tranquilamente.","Sentirse irritable o molestarse fácilmente.","Sentir miedo como si algo terrible pudiera suceder."]},
+{id:"dass",t:"Bloque 3: Estados psicosomáticos y estrés (DASS-21)",ins:"Marca la opción que mejor describa tu situación durante las últimas 4 semanas.",o:"dass",base:0,q:["Me costó mucho descargar la tensión.","Me di cuenta de que tenía la boca seca.","No podía sentir nada positivo.","Se me hizo difícil respirar (jadeo o falta de aire sin haber hecho esfuerzo físico).","Se me hizo difícil tomar la iniciativa para hacer cosas.","Reaccioné exageradamente en ciertas situaciones.","Sentí que mis manos temblaban.","Sentí que estaba gastando mucha energía en poco tiempo.","Estaba preocupado/a por situaciones en las cuales podía tener pánico o sentirme ridículo/a.","Sentí que no tenía nada por qué vivir.","Noté que me agitaba.","Se me hizo difícil relajarme.","Me sentí triste y deprimido/a.","No toleré nada que no me permitiera continuar con lo que estaba haciendo.","Sentí que estaba al punto de tener un ataque de pánico.","No pude entusiasmarme con nada.","Sentí que valía muy poco como persona.","Sentí que estaba muy sensible.","Sentí los latidos de mi corazón a pesar de no haber hecho esfuerzo físico.","Tuve miedo sin razón alguna.","Sentí que la vida no tenía ningún sentido."]},
+{id:"sdrs",t:"Bloque 4: Adaptación y funcionalidad (SDRS)",ins:"Marca la opción que mejor describa tu situación durante las últimas 4 semanas.",o:"sdrs",base:1,q:["He podido realizar mis tareas (estudios o trabajo) a tiempo y con un nivel de calidad adecuado.","Me he sentido interesado/a y motivado/a por mis estudios o mi trabajo actual.","He tenido fricciones, discusiones o conflictos con mis compañeros (de clase o trabajo).","He participado en actividades sociales, fiestas o reuniones con amigos.","He podido hablar abiertamente y compartir mis sentimientos con mis amigos cercanos.","Me he sentido solo/a o alejado/a de los demás, incluso cuando estoy con gente.","He tenido discusiones constantes o problemas de comunicación con mis padres o familiares cercanos.","He dependido demasiado de los demás para tomar mis propias decisiones.","He dedicado tiempo a mis pasatiempos, hobbies o actividades que me divierten.","Me he sentido capaz de manejar los problemas cotidianos que se me presentan.","He evitado situaciones sociales por miedo a sentirme incómodo/a o juzgado/a.","En general, me siento satisfecho/a con la forma en que me llevo con las personas que me rodean."]}];
+
+$("#fecha").value=new Date().toISOString().slice(0,10);
+$("#blocks").innerHTML=B.map(b=>`<div class="card"><h2>${b.t}</h2><p class="mut">${b.ins}</p>`+b.q.map((q,i)=>`<div class="q" id="q-${b.id}-${i}"><p>${i+1}. ${q}</p><div class="opts">`+OPT[b.o].map((l,k)=>`<label><input type="radio" name="${b.id}${i}" value="${k+b.base}"><span>${l}</span></label>`).join("")+`</div></div>`).join("")+`</div>`).join("");
+
+const val=(id,i)=>{const e=document.querySelector(`input[name="${id}${i}"]:checked`);return e?+e.value:null};
+const arr=b=>b.q.map((_,i)=>val(b.id,i));
+
+$("#go").onclick=()=>{
+ const e=$("#err"),miss=[];
+ B.forEach(b=>b.q.forEach((_,i)=>{const el=$(`#q-${b.id}-${i}`);const m=val(b.id,i)===null;el.classList.toggle("miss",m);if(m)miss.push(el)}));
+ const nom=$("#nom").value.trim(),edad=$("#edad").value,sexo=$("#sexo").value,fecha=$("#fecha").value;
+ if(!nom||!edad||!sexo||!fecha){e.textContent="Completa nombre, edad, sexo y fecha de aplicación.";window.scrollTo(0,0);return}
+ if(!$("#cons").checked){e.textContent="Debes aceptar el consentimiento informado.";$("#cons").scrollIntoView({block:"center"});return}
+ if(miss.length){e.textContent=`Faltan ${miss.length} respuesta(s). Están resaltadas en rojo.`;miss[0].scrollIntoView({block:"center"});return}
+ e.textContent="";
+ const d={formato:"TEST_MULTIDIMENSIONAL",version:1,nombre:nom,edad:+edad,sexo,fecha,consentimiento:true,bfi:arr(B[0]),phq:arr(B[1]),gad:arr(B[2]),dass:arr(B[3]),sdrs:arr(B[4])};
+ const txt="TEST_MULTIDIMENSIONAL v1\n"+JSON.stringify(d);
+ $("#raw").value=txt;$("#raw").onclick=function(){this.select()};
+ $("#dl").onclick=async()=>{const m=$("#cpmsg"),r=$("#raw");try{await navigator.clipboard.writeText(txt);m.textContent="Texto copiado."}catch(x){r.focus();r.select();try{document.execCommand("copy");m.textContent="Texto copiado."}catch(y){m.textContent="Texto seleccionado: cópialo con Ctrl+C (o mantén presionado en el móvil)."}}};
+ $("#formWrap").style.display="none";$("#done").style.display="block";window.scrollTo(0,0);
+};
+</script>
+</body>
+</html>
